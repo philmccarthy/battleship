@@ -1,4 +1,5 @@
 require './lib/cell'
+require 'pry'
 
 class Board
     attr_reader :cells
@@ -18,12 +19,28 @@ class Board
         @cells.has_key?(coordinate)
     end
 
-    def valid_placement?(ship, *coordinates)
-        if ship.length == coordinates.length
-            if coordinates.each_cons
+    def valid_placement?(ship, coordinates)
+        if ship.length == coordinates.count 
+            if coordinates.count == 2
+            @cells.keys.each_cons(2) do |a|
+                if a == coordinates
+                    return true
+                else
+                    return false
+                end
             end
+
+            elsif coordinates.count == 3
+                @cells.keys.each_cons(3) do |a|
+                    if a == coordinates
+                        return true
+                    else
+                        return false
+                    end
+                end
+            end
+        else 
+            return false
         end
     end
-    #generator method to populate board with coordinate and object
-    
 end
