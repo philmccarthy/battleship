@@ -26,8 +26,8 @@ class Cell
         end
     end
 
-    def render(fog_of_war = false)
-      if fog_of_war == true
+    def render(fog = false)
+      if fog == true && !empty?
         @render = "S"
       elsif @ship == nil && @fired_upon == true
         @render = "M"
