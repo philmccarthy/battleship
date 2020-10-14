@@ -1,11 +1,9 @@
 require './lib/cell'
-require 'pry'
 
 class Board
     attr_reader :cells
     def initialize
         @cells = {}
-        
     end
 
     def generate
@@ -20,27 +18,25 @@ class Board
     end
 
     def valid_placement?(ship, coordinates)
-        if ship.length == coordinates.count 
-            if coordinates.count == 2
-            @cells.keys.each_cons(2) do |a|
-                if a == coordinates
-                    return true
-                else
-                    return false
-                end
-            end
-
-            elsif coordinates.count == 3
-                @cells.keys.each_cons(3) do |a|
-                    if a == coordinates
-                        return true
-                    else
-                        return false
-                    end
-                end
-            end
-        else 
-            return false
-        end
+      valid_length?(ship, coordinates) && (valid_horiz?(ship, coordinates) || valid_vertical?(ship, coordinates))
     end
-end
+
+    def valid_length?(ship, coordinates)
+      ship.length == coordinates.count
+    end
+
+    def valid_horiz?(ship, coordinates)
+      @cells.keys.each_cons(ship.length).any? { |consec| coordinates == consec }
+    end
+
+    def valid_vertical?(ship, coordinates)
+      num = coordinates.map {|coord| coord[1]}
+      ord = @cells.keys.map {|coord| coord.ord }
+      coord_ord = coordinates.map {|coord| coord.ord}
+      if coordinates.all? {|coord| coord[1] == num.uniq[0]}
+        ord.uniq.each_cons(coordinates.length).any? { |consec| coord_ord == consec }
+      else
+        false
+      end
+    end
+  end
