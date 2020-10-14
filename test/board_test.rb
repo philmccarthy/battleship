@@ -8,7 +8,7 @@ class BoardTest < Minitest::Test
         @board = Board.new
         @board.generate
         @cruiser = Ship.new("Cruiser", 3)
-        @submarine = Ship.new("Submarine", 2) 
+        @submarine = Ship.new("Submarine", 2)
     end
 
     def test_board_exist_and_has_16_cells
@@ -18,27 +18,29 @@ class BoardTest < Minitest::Test
     end
 
     def test_valid_placements_match_by_length
+      # skip
         assert_equal false, @board.valid_placement?(@cruiser, ["A1", "A2"])
         assert_equal false, @board.valid_placement?(@submarine, ["A2", "A3", "A4"])
     end
-        
-    def test_valid_placements_cannot_be_nonconsecutive 
+
+    def test_valid_placements_cannot_be_nonconsecutive
+      # skip
         assert_equal false, @board.valid_placement?(@cruiser, ["A1", "A2", "A4"])
         assert_equal false, @board.valid_placement?(@submarine, ["A1", "C1"])
         assert_equal false, @board.valid_placement?(@cruiser, ["A3", "A2", "A1"])
-
     end
 
     def test_valid_placements_cannot_be_diagonal
+      # skip
         assert_equal false, @board.valid_placement?(@submarine, ["C1", "B1"])
         assert_equal false, @board.valid_placement?(@cruiser, ["A1", "B2", "C3"])
         assert_equal false, @board.valid_placement?(@submarine, ["C2", "D3"])
     end
 
     def test_valid_placements_inclusive
-        assert_equal true, @board.valid_placement?(@submarine, ["A1", "A2"])
-        # assert_equal true, @board.valid_placement?(@submarine, ["A2", "A3"])
-
+        # skip
+        assert @board.valid_placement?(@submarine, ["A1", "A2"])
+        assert_equal false, @board.valid_placement?(@submarine, ["A2", "D3"])
+        assert @board.valid_placement?(@cruiser, ["B1", "C1", "D1"])
     end
 end
-
