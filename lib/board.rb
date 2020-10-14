@@ -57,6 +57,26 @@ class Board
         if valid_placement?(ship, coordinates)
         coordinates.each do |coord|
         cell_place_ship(ship, coord)
+        end 
         end
     end
-  end
+
+    def set_fog(fog = false)
+        @cells.values.map {|obj| obj.render(fog)}
+    end
+
+    def render(fog = false)
+        a = @cells.select {|key, val| key[0] == "A"}
+        b = @cells.select {|key, val| key[0] == "B"}
+        c = @cells.select {|key, val| key[0] == "C"}
+        d = @cells.select {|key, val| key[0] == "D"}
+        if fog == true
+        set_fog(true)
+        end
+        a_ren = a.values.map {|obj| obj.render + " "}
+        b_ren = b.values.map {|obj| obj.render + " "}
+        c_ren = c.values.map {|obj| obj.render + " "}
+        d_ren = d.values.map {|obj| obj.render + " "}
+        "  1 2 3 4 \n A #{a_ren.join('')} \n B #{b_ren.join('')} \n C #{c_ren.join('')} \n D #{d_ren.join('')}"
+    end
+end

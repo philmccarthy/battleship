@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require './lib/board'
 require './lib/ship'
 require './lib/cell'
-
+require 'pry'
 class BoardTest < Minitest::Test
     def setup
         @board = Board.new
@@ -11,7 +11,7 @@ class BoardTest < Minitest::Test
         @submarine = Ship.new("Submarine", 2)
         @cell_1 = @board.cells["A1"] 
         @cell_2 = @board.cells["A2"]
-        @cell_3 = @board.cells["A3"]  
+        @cell_3 = @board.cells["A3"]         
     end
 
     def test_board_exist_and_has_16_cells
@@ -58,5 +58,14 @@ class BoardTest < Minitest::Test
     def test_ships_cannot_overlap
         @board.place(@cruiser, ["A1", "A2", "A3"])
         assert_equal false, @board.valid_placement?(@submarine, ["A1", "B1"])
+    end
+
+    def test_board_can_render_cells
+        @board.place(@cruiser, ["A1", "A2", "A3"])
+        expected = "  1 2 3 4 \n A . . . .  \n B . . . .  \n C . . . .  \n D . . . . "
+        assert_equal expected, @board.render
+
+        expected = "  1 2 3 4 \n A S S S .  \n B . . . .  \n C . . . .  \n D . . . . "
+        assert_equal expected, @board.render(true)
     end
 end
