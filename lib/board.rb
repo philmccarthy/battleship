@@ -18,19 +18,25 @@ class Board
     end
 
     def valid_placement?(ship, coordinates)
-      valid_length?(ship, coordinates) && valid_consec?(ship, coordinates)
+      valid_length?(ship, coordinates) && (valid_horiz?(ship, coordinates) || valid_vertical?(ship, coordinates))
     end
 
     def valid_length?(ship, coordinates)
       ship.length == coordinates.count
     end
 
-    def valid_consec?(ship, coordinates)
+    def valid_horiz?(ship, coordinates)
       @cells.keys.each_cons(ship.length).any? { |consec| coordinates == consec }
     end
 
-    def vertical_consec?(ship, coordinate)
+    def valid_vertical?(ship, coordinates)
+      num = coordinates.map {|coord| coord[1]}
+      ord = @cells.keys.map {|coord| coord.ord }
+      coord_ord = coordinates.map {|coord| coord.ord}
+      if coordinates.all? {|coord| coord[1] == num.uniq[0]}
+        ord.uniq.each_cons(coordinates.length).any? { |consec| coord_ord == consec }
+      else
+        false
+      end
     end
-
-
   end
