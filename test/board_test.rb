@@ -9,7 +9,6 @@ class BoardTest < Minitest::Test
         @board.generate
         @cruiser = Ship.new("Cruiser", 3)
         @submarine = Ship.new("Submarine", 2)
-        @board.place(@cruiser, ["A1", "A2", "A3"])
         @cell_1 = @board.cells["A1"] 
         @cell_2 = @board.cells["A2"]
         @cell_3 = @board.cells["A3"]  
@@ -46,6 +45,7 @@ class BoardTest < Minitest::Test
     end
 
     def test_can_place_ship
+        @board.place(@cruiser, ["A1", "A2", "A3"])
         assert_instance_of Cell, @board.cells["A1"]  
         assert_instance_of Cell, @board.cells["A2"] 
         assert_instance_of Cell, @board.cells["A3"]
@@ -53,5 +53,10 @@ class BoardTest < Minitest::Test
         assert_equal @cruiser, @cell_2.ship
         assert_equal @cruiser, @cell_3.ship
         assert @cell_3.ship == @cell_2.ship
+    end
+
+    def test_ships_cannot_overlap
+        @board.place(@cruiser, ["A1", "A2", "A3"])
+        assert_equal false, @board.valid_placement?(@submarine, ["A1", "B1"])
     end
 end
