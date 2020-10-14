@@ -17,8 +17,17 @@ class Board
         @cells.has_key?(coordinate)
     end
 
+    def valid_cell_placement?(ship, coordinate)
+        @cells[coordinate].ship == nil
+            
+    end
+
     def valid_placement?(ship, coordinates)
-      valid_length?(ship, coordinates) && (valid_horiz?(ship, coordinates) || valid_vertical?(ship, coordinates))
+        if coordinates.all? {|coord| valid_cell_placement?(ship, coord)}
+        valid_length?(ship, coordinates) && (valid_horiz?(ship, coordinates) || valid_vertical?(ship, coordinates))
+        else
+            false
+        end
     end
 
     def valid_length?(ship, coordinates)
@@ -38,5 +47,16 @@ class Board
       else
         false
       end
+    end
+
+    def cell_place_ship(ship, coordinate)
+        @cells[coordinate].place_ship(ship)
+    end
+    
+    def place(ship, coordinates)
+        if valid_placement?(ship, coordinates)
+        coordinates.each do |coord|
+        cell_place_ship(ship, coord)
+        end
     end
   end
