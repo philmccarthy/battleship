@@ -3,15 +3,16 @@ require './lib/board'
 require './lib/ship'
 require './lib/cell'
 require 'pry'
+
 class BoardTest < Minitest::Test
     def setup
         @board = Board.new
         @board.generate
         @cruiser = Ship.new("Cruiser", 3)
         @submarine = Ship.new("Submarine", 2)
-        @cell_1 = @board.cells["A1"] 
+        @cell_1 = @board.cells["A1"]
         @cell_2 = @board.cells["A2"]
-        @cell_3 = @board.cells["A3"]         
+        @cell_3 = @board.cells["A3"]
     end
 
     def test_board_exist_and_has_16_cells
@@ -30,6 +31,8 @@ class BoardTest < Minitest::Test
         assert_equal false, @board.valid_placement?(@submarine, ["A2", "A3", "A4"])
     end
 
+  # need to add unit tests for valid_placement unit tests
+
     def test_valid_placements_cannot_be_nonconsecutive
         assert_equal false, @board.valid_placement?(@cruiser, ["A1", "A2", "A4"])
         assert_equal false, @board.valid_placement?(@submarine, ["A1", "C1"])
@@ -42,22 +45,25 @@ class BoardTest < Minitest::Test
         assert_equal false, @board.valid_placement?(@submarine, ["C2", "D3"])
     end
 
+    def test_valid_placement_cannot_be_vertical
+      assert @board.valid_vertical?(@cruiser, ["B1", "C1", "D1"])
+    end
+
     def test_valid_placements_inclusive
         assert @board.valid_placement?(@submarine, ["A1", "A2"])
         assert_equal false, @board.valid_placement?(@submarine, ["A2", "D3"])
         assert @board.valid_placement?(@cruiser, ["B1", "C1", "D1"])
-        assert @board.valid_vertical?(@cruiser, ["B1", "C1", "D1"])
     end
 
     def test_can_place_ship
         @board.place(@cruiser, ["A1", "A2", "A3"])
-        assert_instance_of Cell, @board.cells["A1"]  
-        assert_instance_of Cell, @board.cells["A2"] 
+        assert_instance_of Cell, @board.cells["A1"]
+        assert_instance_of Cell, @board.cells["A2"]
         assert_instance_of Cell, @board.cells["A3"]
         assert_equal @cruiser, @cell_1.ship
         assert_equal @cruiser, @cell_2.ship
         assert_equal @cruiser, @cell_3.ship
-        assert @cell_3.ship == @cell_2.ship
+        assert @cell_3.ship == @cell_2.ship 
     end
 
     def test_ships_cannot_overlap

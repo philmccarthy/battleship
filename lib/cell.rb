@@ -29,9 +29,9 @@ class Cell
     def render(fog = false)
       if fog == true && !empty?
         @render = "S"
-      elsif @ship == nil && @fired_upon == true
+      elsif empty? && fired_upon?
         @render = "M"
-      elsif !empty? && @fired_upon == true
+      elsif !empty? && fired_upon?
         if @ship.sunk?
           @render = "X"
         else
