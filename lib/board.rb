@@ -77,6 +77,6 @@ class Board
         b_ren = b.values.map {|obj| obj.render + " "}
         c_ren = c.values.map {|obj| obj.render + " "}
         d_ren = d.values.map {|obj| obj.render + " "}
-        "  1 2 3 4 \n A #{a_ren.join('')} \n B #{b_ren.join('')} \n C #{c_ren.join('')} \n D #{d_ren.join('')}"
+        "   1 2 3 4 \n A #{a_ren.join('')} \n B #{b_ren.join('')} \n C #{c_ren.join('')} \n D #{d_ren.join('')}"
     end
 end
