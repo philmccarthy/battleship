@@ -20,6 +20,11 @@ class BoardTest < Minitest::Test
         assert_instance_of Cell, @board.cells["A1"]
     end
 
+    def test_board_can_check_valid_coordinate
+        assert @board.valid_coordinate?("A4")
+        assert_equal false, @board.valid_coordinate?("Z4")
+        
+    end
     def test_valid_placements_match_by_length
         assert_equal false, @board.valid_placement?(@cruiser, ["A1", "A2"])
         assert_equal false, @board.valid_placement?(@submarine, ["A2", "A3", "A4"])
@@ -62,10 +67,10 @@ class BoardTest < Minitest::Test
 
     def test_board_can_render_cells
         @board.place(@cruiser, ["A1", "A2", "A3"])
-        expected = "  1 2 3 4 \n A . . . .  \n B . . . .  \n C . . . .  \n D . . . . "
+        expected = "   1 2 3 4 \n A . . . .  \n B . . . .  \n C . . . .  \n D . . . . "
         assert_equal expected, @board.render
 
-        expected = "  1 2 3 4 \n A S S S .  \n B . . . .  \n C . . . .  \n D . . . . "
+        expected = "   1 2 3 4 \n A S S S .  \n B . . . .  \n C . . . .  \n D . . . . "
         assert_equal expected, @board.render(true)
     end
 end
