@@ -2,8 +2,6 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/game.rb'
 require './lib/board.rb'
-require './lib/player.rb'
-require './lib/npc.rb'
 
 class GameTest < Minitest::Test
   def setup
