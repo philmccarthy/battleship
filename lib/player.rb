@@ -16,10 +16,9 @@ class Player
     @ships << ship
   end
 
-  def random_placement(ship)
+  def random_coordinates(ship)
     coordinates = []
     @board.cells.keys.each_cons(ship.length) {|cons_keys| coordinates << cons_keys}
-    # add a list of all vertical coordinates to coordinates array
     columns = @board.cells.keys.map {|coord| coord[1]}.uniq
     vert_choices = columns.map do |col|
       @board.cells.keys.select {|coord| coord[1] == col}
@@ -29,6 +28,6 @@ class Player
     until @board.valid_placement?(ship, computer_selection)
       computer_selection = coordinates.sample
     end
-    @board.place(ship, computer_selection)
+    computer_selection
   end
 end
