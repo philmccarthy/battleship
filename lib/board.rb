@@ -35,7 +35,12 @@ class Board
   end
 
   def valid_horiz?(ship, coordinates)
-    @cells.keys.each_cons(ship.length).any? { |consec| coordinates == consec }
+    coord_ord = coordinates.map { |coord| coord.ord }
+    if coordinates.all? { |coord| coord.ord == coord_ord[0] }
+      @cells.keys.each_cons(ship.length).any? { |consec| coordinates == consec }
+    else 
+      false
+    end
   end
 
   def valid_vertical?(ship, coordinates)

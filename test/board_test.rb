@@ -44,6 +44,7 @@ class BoardTest < Minitest::Test
   def test_valid_placements_cannot_be_diagonal
     assert_equal false, @board.valid_placement?(@submarine, ["C1", "B1"])
     assert_equal false, @board.valid_placement?(@cruiser, ["A1", "B2", "C3"])
+    assert_equal false, @board.valid_placement?(@cruiser, ["A3", "A4", "B1"])
     assert_equal false, @board.valid_placement?(@submarine, ["C2", "D3"])
   end
 
