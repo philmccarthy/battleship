@@ -1,5 +1,3 @@
-require './lib/cell'
-
 class Board
   attr_reader :cells
   def initialize
@@ -38,7 +36,7 @@ class Board
     coord_ord = coordinates.map { |coord| coord.ord }
     if coordinates.all? { |coord| coord.ord == coord_ord[0] }
       @cells.keys.each_cons(ship.length).any? { |consec| coordinates == consec }
-    else 
+    else
       false
     end
   end

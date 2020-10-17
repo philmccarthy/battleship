@@ -1,38 +1,55 @@
-require './lib/cell.rb'
-require './lib/ship.rb'
-require './lib/board.rb'
+require './lib/cell'
+require './lib/ship'
+require './lib/board'
+require './lib/player'
 
 class Game
   attr_reader :player_board,
-              :computer_board
-
-  def health_check
-    @player_health = [@player_cruiser, @player_submarine].sum { |ship| ship.health }
-    @computer_health = [@computer_cruiser, @computer_submarine].sum { |ship| ship.health }
+              :computer_board,
+              :computer_health,
+              :player_health
+  def initialize
+    setup
   end
 
-  def computer_place(ship)
-    coordinates = []
-    @computer_board.cells.keys.each_cons(ship.length) {|cons_keys| coordinates << cons_keys}
-    computer_selection = coordinates.sample
-    until @computer_board.valid_placement?(ship, computer_selection)
-      computer_selection = coordinates.sample
+  def health_check
+    @player.health
+    @computer.health
+  end
+
+  def computer_count_cells_with_ships
+    @computer_board.cells.values.count do |cell|
+      !cell.empty?
     end
-    @computer_board.place(ship, computer_selection)
+  end
+
+  def create_new_ship
+    puts "Enter ship name"
+    ship_name = gets.chomp.to_s
+    puts "Enter ship length"
+    ship_length = gets.chomp.to_i
+    if ship_length < 2 || ship_length > Math.sqrt(board.cells.length)
+        "Invalid length, try again"
+    else
+    Ship.new(ship_name, ship_length)
+    end
   end
 
   def setup
+    @player = Player.new
+    @computer = Player.new
     @player_board = Board.new
     @player_board.generate
     @computer_board = Board.new
+    @computer.add_board(@computer_board)
     @computer_board.generate
-    @player_cruiser = Ship.new("Cruiser", 3)
-    @player_submarine = Ship.new("Submarine", 2)
-    @computer_cruiser = Ship.new("Cruiser", 3)
-    @computer_submarine = Ship.new("Submarine", 2)
+    @player.add_ship(@player_cruiser = Ship.new("Cruiser", 3))
+    @player.add_ship(@player_submarine = Ship.new("Submarine", 2))
+    @computer.add_ship(@computer_cruiser = Ship.new("Cruiser", 3))
+    @computer.add_ship(@computer_submarine = Ship.new("Submarine", 2))
+    @computer.random_placement(@computer_cruiser)
+    @computer.random_placement(@computer_submarine)
     health_check
-    computer_place(@computer_cruiser)
-    computer_place(@computer_submarine)
   end
 
   def main_menu
@@ -55,12 +72,12 @@ class Game
 
   def play_game
     setup
+    # create custom ships? y/n
     @computer_targets = @player_board.cells.keys
     puts "PLACE SHIPS".center(60, "=")
     puts "I have laid out my ships on the grid."
     puts "You now need to lay out your two ships."
-    player_place(@player_cruiser)
-    player_place(@player_submarine)
+    @player.ships.each { |ship| player_place(ship) }
     firing_phase
   end
 
@@ -87,7 +104,7 @@ class Game
 
     def firing_phase
     puts "\nWe are ready to RRRRUUUUMMBBBLLLEEE!\n\n"
-    until @player_health == 0 || @computer_health == 0 do
+    until @player.health == 0 || @computer.health == 0 do
       puts "COMPUTER BOARD".center(60, "=")
       puts @computer_board.render
       puts "PLAYER BOARD".center(60, "=")
@@ -125,10 +142,18 @@ class Game
   end
 
   def game_over
-    if @computer_health == 0
-      puts "PLAYER WINS!".center(60, "=")
-    elsif @player_health == 0
-      puts "COMPUTER WINS!".center(60, "=")
+    puts "COMPUTER BOARD".center(60, "=")
+    puts @computer_board.render
+    puts "PLAYER BOARD".center(60, "=")
+    puts @player_board.render(true)
+    if @computer.health == 0
+      puts
+      puts "PLAYER WINS!".center(60, "*")
+      puts
+    elsif @player.health == 0
+      puts
+      puts "COMPUTER WINS!".center(60, "*")
+      puts
     end
     play_again
   end
@@ -138,7 +163,7 @@ class Game
     print '> '
     input = gets.chomp.downcase
     if input == 'm'
-      start  #
+      main_menu
     elsif input == 'q'
       exit
     else "I don't recognize that input. Try again."
