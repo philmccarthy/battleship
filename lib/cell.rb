@@ -31,15 +31,30 @@ class Cell
       @render = "S"
     elsif empty? && fired_upon?
       @render = "M"
-    elsif !empty? && fired_upon?
-      if @ship.sunk?
+    elsif !empty? && fired_upon? && @ship.sunk?
         @render = "X"
-      else
+    elsif !empty? && fired_upon? && !@ship.sunk?
         @render = "H"
-      end
     else @render
     end
   end
+
+
+  # def render(fog = false)
+  #   if fog == true && !empty?
+  #     @render = "S"
+  #   elsif empty? && fired_upon?
+  #     @render = "M"
+  #   elsif !empty? && fired_upon?
+  #     if @ship.sunk?
+  #       @render = "X"
+  #     else
+  #       @render = "H"
+  #     end
+  #   else @render
+  #   end
+  # end
+  #
 
   def shot_result
     render
