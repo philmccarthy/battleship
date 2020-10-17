@@ -4,13 +4,12 @@ require './lib/board.rb'
 
 class Game
   attr_reader :player_board,
-              :computer_board,
+              :computer_board
 
-  # def game_over?
-  #   @player_health = [player_cruiser, player_submarine].inject(0) { |sum, ship| sum += ship.health }
-  #   @computer_health = [computer_cruiser, computer_submarine].inject(0) { |sum, ship| sum += ship.health }
-  #   @player_health == 0 || @computer_health == 0
-  # end
+  def health_check
+    @player_health = [@player_cruiser, @player_submarine].sum { |ship| ship.health }
+    @computer_health = [@computer_cruiser, @computer_submarine].sum { |ship| ship.health }
+  end
 
   def computer_place(ship)
     coordinates = []
@@ -31,8 +30,7 @@ class Game
     @player_submarine = Ship.new("Submarine", 2)
     @computer_cruiser = Ship.new("Cruiser", 3)
     @computer_submarine = Ship.new("Submarine", 2)
-    @player_health = [@player_cruiser, @player_submarine].inject(0) { |sum, ship| sum += ship.health }
-    @computer_health = [@computer_cruiser, @computer_submarine].inject(0) { |sum, ship| sum += ship.health }
+    health_check
     computer_place(@computer_cruiser)
     computer_place(@computer_submarine)
   end
@@ -87,65 +85,44 @@ class Game
       @player_board.place(ship, ship_coordinates)
     end
 
-    #
-    # submarine_coordinates = [""]
-    # until submarine_coordinates.all? { |coord| @player_board.valid_coordinate?(coord) } &&
-    #   @player_board.valid_placement?(@player_submarine, submarine_coordinates) do
-    #   puts
-    #   puts @player_board.render(true)
-    #   puts "\nEnter the squares for your Submarine (2 spaces)"
-    #   print '> '
-    #   submarine_coordinates = gets.chomp.to_s.upcase.split(" ")
-    #   if !submarine_coordinates.all? { |coord| @player_board.valid_coordinate?(coord) }
-    #     puts
-    #     puts "What board are you playing on?".center(60, "=")
-    #   elsif !@player_board.valid_placement?(@player_submarine, submarine_coordinates)
-    #     puts
-    #     puts "Invalid coordinates, please try again.".center(60, "=")
-    #   end
-    # end
-    # @player_board.place(@player_submarine, submarine_coordinates)
     def firing_phase
-      puts "\nWe are ready to RRRRUUUUMMBBBLLLEEE!\n\n"
-      until @player_health == 0 || @computer_health == 0 do
-        puts "COMPUTER BOARD".center(60, "=")
-        puts @computer_board.render
-        puts "PLAYER BOARD".center(60, "=")
-        puts @player_board.render(true)
-        puts "\nEnter the coordinate for your shot:"
-        print '> '
-        player_target = gets.chomp.to_s.upcase
-        if !@computer_board.valid_coordinate?(player_target)
-          puts
-          puts "Invalid coordinate. What board are you playing on?".center(60, "=")
-          puts
-          next
-        elsif @computer_board.cells[player_target].render != '.'
-          puts
-          puts "Ha! You already fired there.".center(60, "=")
-          puts
-        elsif
-          @computer_board.cells.include?(player_target)
-          @computer_board.cells[player_target].fire_upon
-          puts "\nYour #{@computer_board.cells[player_target].shot_result}"
-        else
-          puts
-          puts "Please enter valid coordinate:".center(60, "=")
-          puts
-        end
-        computer_shot = @computer_targets.delete(@computer_targets.sample)
-        if @player_board.cells.include?(computer_shot)
-          @player_board.cells[computer_shot].fire_upon
-          puts "My #{@player_board.cells[computer_shot].shot_result}\n"
-        end
+    puts "\nWe are ready to RRRRUUUUMMBBBLLLEEE!\n\n"
+    until @player_health == 0 || @computer_health == 0 do
+      puts "COMPUTER BOARD".center(60, "=")
+      puts @computer_board.render
+      puts "PLAYER BOARD".center(60, "=")
+      puts @player_board.render(true)
+      puts "\nEnter the coordinate for your shot:"
+      print '> '
+      player_target = gets.chomp.to_s.upcase
+      if !@computer_board.valid_coordinate?(player_target)
+        puts
+        puts "Invalid coordinate. What board are you playing on?".center(60, "=")
+        puts
+        next
+      elsif @computer_board.cells[player_target].render != '.'
+        puts
+        puts "Ha! You already fired there.".center(60, "=")
+        puts
+      elsif
+        @computer_board.cells.include?(player_target)
+        @computer_board.cells[player_target].fire_upon
+        puts "\nYour #{@computer_board.cells[player_target].shot_result}"
+      else
+        puts
+        puts "Please enter valid coordinate:".center(60, "=")
+        puts
       end
-      @player_health = [@player_cruiser, @player_submarine].inject(0) { |sum, ship| sum += ship.health }
-      @computer_health = [@computer_cruiser, @computer_submarine].inject(0) { |sum, ship| sum += ship.health }
-        if @player_health == 0 || @computer_health == 0
-          game_over
-        end
+      computer_shot = @computer_targets.delete(@computer_targets.sample)
+      if @player_board.cells.include?(computer_shot)
+        @player_board.cells[computer_shot].fire_upon
+        puts "My #{@player_board.cells[computer_shot].shot_result}\n"
+        puts
       end
+      health_check
     end
+    game_over
+  end
 
   def game_over
     if @computer_health == 0
@@ -167,3 +144,4 @@ class Game
     else "I don't recognize that input. Try again."
     end
   end
+end
