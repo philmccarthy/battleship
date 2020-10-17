@@ -2,12 +2,13 @@ require './lib/cell'
 require './lib/ship'
 require './lib/board'
 require './lib/player'
+require 'pry'
 
 class Game
   attr_reader :player_board,
               :computer_board,
-              :computer_health,
-              :player_health
+              :player,
+              :computer
   def initialize
     setup
   end
@@ -47,8 +48,8 @@ class Game
     @player.add_ship(@player_submarine = Ship.new("Submarine", 2))
     @computer.add_ship(@computer_cruiser = Ship.new("Cruiser", 3))
     @computer.add_ship(@computer_submarine = Ship.new("Submarine", 2))
-    @computer.random_placement(@computer_cruiser)
-    @computer.random_placement(@computer_submarine)
+    @computer_board.place(@computer_cruiser, @computer.random_coordinates(@computer_cruiser))
+    @computer_board.place(@computer_submarine, @computer.random_coordinates(@computer_submarine))
     health_check
   end
 
