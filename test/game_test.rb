@@ -16,11 +16,10 @@ class GameTest < Minitest::Test
   end
 
   def test_can_check_player_health
-    assert_equal 5, @game.health_check  
+    assert_equal 5, @game.health_check
   end
 
   def test_setup_places_ships_on_cells
     assert_equal 5, @game.computer_count_cells_with_ships
   end
-
 end
