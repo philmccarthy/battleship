@@ -2,7 +2,6 @@ require './lib/cell'
 require './lib/ship'
 require './lib/board'
 require './lib/player'
-require 'pry'
 
 class Game
   attr_reader :player_board,
@@ -13,29 +12,6 @@ class Game
     setup
   end
 
-  def health_check
-    @player.health
-    @computer.health
-  end
-
-  def computer_count_cells_with_ships
-    @computer_board.cells.values.count do |cell|
-      !cell.empty?
-    end
-  end
-
-  def create_new_ship
-    puts "Enter ship name"
-    ship_name = gets.chomp.to_s
-    puts "Enter ship length"
-    ship_length = gets.chomp.to_i
-    if ship_length < 2 || ship_length > Math.sqrt(board.cells.length)
-        "Invalid length, try again"
-    else
-    Ship.new(ship_name, ship_length)
-    end
-  end
-
   def setup
     @player = Player.new
     @computer = Player.new
@@ -44,12 +20,6 @@ class Game
     @computer_board = Board.new
     @computer.add_board(@computer_board)
     @computer_board.generate
-    @player.add_ship(@player_cruiser = Ship.new("Cruiser", 3))
-    @player.add_ship(@player_submarine = Ship.new("Submarine", 2))
-    @computer.add_ship(@computer_cruiser = Ship.new("Cruiser", 3))
-    @computer.add_ship(@computer_submarine = Ship.new("Submarine", 2))
-    @computer_board.place(@computer_cruiser, @computer.random_coordinates(@computer_cruiser))
-    @computer_board.place(@computer_submarine, @computer.random_coordinates(@computer_submarine))
     health_check
   end
 
@@ -62,7 +32,7 @@ class Game
       print '> '
       input = gets.chomp.to_s.downcase
       if input == "p"
-        play_game
+        custom_ship_query
       elsif input == "q"
         exit
       else
@@ -71,10 +41,48 @@ class Game
     end
   end
 
+  def custom_ship_query
+    puts "Enter y to create custom ships or n to play with default ships."
+    print '> '
+    input = gets.chomp.to_s
+    if input == 'y'
+      create_new_ship
+    elsif input == 'n'
+      @player.add_ship(@player_cruiser = Ship.new("Cruiser", 3))
+      @player.add_ship(@player_submarine = Ship.new("Submarine", 2))
+      @computer.add_ship(@computer_cruiser = Ship.new("Cruiser", 3))
+      @computer.add_ship(@computer_submarine = Ship.new("Submarine", 2))
+      @computer_board.place(@computer_cruiser, @computer.random_coordinates(@computer_cruiser))
+      @computer_board.place(@computer_submarine, @computer.random_coordinates(@computer_submarine))
+      play_game
+    else "I don't recognize that input. Try again."
+    end
+  end
+
+  def create_new_ship
+    until @player.ships.size == 2
+      puts "Enter ship name"
+      print '> '
+      ship_name = gets.chomp.to_s.capitalize
+      puts "Enter ship length"
+      print '> '
+      ship_length = 0
+      while ship_length < 2 || ship_length > Math.sqrt(@player_board.cells.length) do
+        ship_length = gets.chomp.to_i
+        if ship_length < 2 || ship_length > Math.sqrt(@player_board.cells.length)
+          puts "Invalid length, try again."
+          print '> '
+        end
+      end
+      @player.ships << Ship.new(ship_name, ship_length)
+      @computer.ships << Ship.new(ship_name, ship_length)
+      @computer_board.place(@computer.ships.last, @computer.random_coordinates(@computer.ships.last))
+      puts "#{ship_name} created!\nCreate your second ship:"
+    end
+    play_game
+  end
+
   def play_game
-    setup
-    # create custom ships? y/n
-    @computer_targets = @player_board.cells.keys
     puts "PLACE SHIPS".center(60, "=")
     puts "I have laid out my ships on the grid."
     puts "You now need to lay out your two ships."
@@ -88,7 +96,7 @@ class Game
       @player_board.valid_placement?(ship, ship_coordinates) do
         puts
         puts @player_board.render(true)
-        puts "\nThe Cruiser is three units long and the Submarine is two units long."
+        puts "\nThe #{@player.ships.first.name} is #{@player.ships.first.length} units long and the #{@player.ships.last.name} is #{@player.ships.last.length} units long."
         puts "Enter the squares for your #{ship.name} (#{ship.length} spaces)"
         print '> '
         ship_coordinates = gets.chomp.to_s.upcase.split(" ")
@@ -104,6 +112,7 @@ class Game
     end
 
     def firing_phase
+    computer_targets = @player_board.cells.keys
     puts "\nWe are ready to RRRRUUUUMMBBBLLLEEE!\n\n"
     until @player.health == 0 || @computer.health == 0 do
       puts "COMPUTER BOARD".center(60, "=")
@@ -131,7 +140,7 @@ class Game
         puts "Please enter valid coordinate:".center(60, "=")
         puts
       end
-      computer_shot = @computer_targets.delete(@computer_targets.sample)
+      computer_shot = computer_targets.delete(computer_targets.sample)
       if @player_board.cells.include?(computer_shot)
         @player_board.cells[computer_shot].fire_upon
         puts "My #{@player_board.cells[computer_shot].shot_result}\n"
@@ -164,10 +173,22 @@ class Game
     print '> '
     input = gets.chomp.downcase
     if input == 'm'
+      setup
       main_menu
     elsif input == 'q'
       exit
     else "I don't recognize that input. Try again."
+    end
+  end
+
+  def health_check
+    @player.health
+    @computer.health
+  end
+
+  def computer_count_cells_with_ships
+    @computer_board.cells.values.count do |cell|
+      !cell.empty?
     end
   end
 end
