@@ -11,10 +11,8 @@ class PlayerTest < Minitest::Test
     @human = Player.new
     @board = Board.new
     @board.generate
-    @computer.add_board(@board)
     @cruiser = Ship.new("Cruiser", 3)
     @submarine = Ship.new("Submarine", 2)
-    
   end
 
   def test_it_exists_and_has_attributes
@@ -23,17 +21,13 @@ class PlayerTest < Minitest::Test
     assert_equal [], @human.ships
   end
 
-  def test_can_add_board
-    assert_instance_of Board, @human.add_board(@board)
-  end
-
   def test_player_can_add_ship
     @human.add_ship(@cruiser)
     assert_equal [@cruiser], @human.ships
   end
 
   def test_player_can_place_ships_randomly
-    expected = [ 
+    expected = [
     ["A1", "A2", "A3"],
     ["A2", "A3", "A4"],
     ["A3", "A4", "B1"],
@@ -64,6 +58,6 @@ class PlayerTest < Minitest::Test
     ["B4", "C4", "D4"]
     ]
 
-    assert_includes expected, @computer.random_coordinates(@cruiser)
+    assert_includes expected, @computer.random_coordinates(@board, @cruiser)
   end
 end
