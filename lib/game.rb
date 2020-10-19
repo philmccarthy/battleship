@@ -18,9 +18,17 @@ class Game
     @player_board = Board.new
     @player_board.generate
     @computer_board = Board.new
-    @computer.add_board(@computer_board)
     @computer_board.generate
     health_check
+  end
+
+  def default_ships
+    @player.add_ship(@player_cruiser = Ship.new("Cruiser", 3))
+    @player.add_ship(@player_submarine = Ship.new("Submarine", 2))
+    @computer.add_ship(@computer_cruiser = Ship.new("Cruiser", 3))
+    @computer.add_ship(@computer_submarine = Ship.new("Submarine", 2))
+    @computer_board.place(@computer_cruiser, @computer.random_coordinates(@computer_board, @computer_cruiser))
+    @computer_board.place(@computer_submarine, @computer.random_coordinates(@computer_board, @computer_submarine))
   end
 
   def main_menu
@@ -48,12 +56,7 @@ class Game
     if input == 'y'
       create_new_ship
     elsif input == 'n'
-      @player.add_ship(@player_cruiser = Ship.new("Cruiser", 3))
-      @player.add_ship(@player_submarine = Ship.new("Submarine", 2))
-      @computer.add_ship(@computer_cruiser = Ship.new("Cruiser", 3))
-      @computer.add_ship(@computer_submarine = Ship.new("Submarine", 2))
-      @computer_board.place(@computer_cruiser, @computer.random_coordinates(@computer_cruiser))
-      @computer_board.place(@computer_submarine, @computer.random_coordinates(@computer_submarine))
+      default_ships
       play_game
     else "I don't recognize that input. Try again."
     end
@@ -76,8 +79,12 @@ class Game
       end
       @player.ships << Ship.new(ship_name, ship_length)
       @computer.ships << Ship.new(ship_name, ship_length)
-      @computer_board.place(@computer.ships.last, @computer.random_coordinates(@computer.ships.last))
-      puts "#{ship_name} created!\nCreate your second ship:"
+      @computer_board.place(@computer.ships.last, @computer.random_coordinates(@computer_board, @computer.ships.last))
+      if @player.ships.size == 1
+        puts "#{ship_name} created!\nCreate your second ship:"
+      else
+        puts "#{ship_name} created!\n"
+      end
     end
     play_game
   end

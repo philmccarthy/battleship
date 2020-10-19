@@ -6,6 +6,7 @@ require './lib/board.rb'
 class GameTest < Minitest::Test
   def setup
     @game = Game.new
+    @game.default_ships
   end
 
   def test_it_exists_and_runs_set_up_method_at_initialize
