@@ -1,5 +1,4 @@
 require './lib/create_board'
-require 'pry'
 
 class Board
   attr_reader :cells
