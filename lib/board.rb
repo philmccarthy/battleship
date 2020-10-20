@@ -1,13 +1,23 @@
+require './lib/create_board'
+require 'pry'
+
 class Board
   attr_reader :cells
-  def initialize
+  def initialize(height = 4, width = 4)
     @cells = {}
+    @height = height
+    @width = width
+  end
+
+  def board_rows
+    ("A"..(@height + 64).chr).to_a
   end
 
   def generate
-    array = %w(A1 A2 A3 A4 B1 B2 B3 B4 C1 C2 C3 C4 D1 D2 D3 D4)
-    array.each do |coor|
-      @cells[coor] = Cell.new(coor)
+    @board_layout = CreateBoard.new
+    array = @board_layout.build_coordinates(@height, @width)
+    array.each do |coord|
+      @cells[coord] = Cell.new(coord)
     end
   end
 
@@ -68,18 +78,23 @@ class Board
     @cells.values.map { |obj| obj.render(fog)}
   end
 
+  def display_row_header(counter)
+    board_rows[counter == 0 ? 0 : counter / @width] + " "
+  end
+
   def render(fog = false)
-    a = @cells.select { |key, val| key[0] == "A" }
-    b = @cells.select { |key, val| key[0] == "B" }
-    c = @cells.select { |key, val| key[0] == "C" }
-    d = @cells.select { |key, val| key[0] == "D" }
     if fog == true
-      set_fog(true)
+        set_fog(true)
     end
-    a_ren = a.values.map { |obj| obj.render + " " }
-    b_ren = b.values.map { |obj| obj.render + " " }
-    c_ren = c.values.map { |obj| obj.render + " " }
-    d_ren = d.values.map { |obj| obj.render + " " }
-    "   1 2 3 4 \n A #{a_ren.join('')} \n B #{b_ren.join('')} \n C #{c_ren.join('')} \n D #{d_ren.join('')}"
+    first_row = (1..@width).map {|num| num.to_s + " "}
+    display = "  #{first_row.join('')} \n"
+    counter = 0
+    @cells.keys.each do |coord|
+        display += display_row_header(counter) if counter % @width == 0
+        counter += 1
+        display += "#{@cells[coord].render} "
+        display += "\n" if counter % @width == 0
+    end
+    display
   end
 end

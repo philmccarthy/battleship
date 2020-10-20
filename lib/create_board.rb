@@ -12,12 +12,10 @@ class CreateBoard
         end
     end
 
-    def board_coordinates(height, width)
-        build_column(height).map do |char|
+    def build_coordinates(height, width)
+        board_coordinates = build_column(height).map do |char|
           build_row(char, width)
-        end.flatten
+        end
+        board_coordinates.flatten
     end
 end
-
-board_coordinates = CreateBoard.new
-p board_coordinates.board_coordinates(8, 8)

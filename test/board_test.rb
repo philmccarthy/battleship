@@ -76,10 +76,10 @@ class BoardTest < Minitest::Test
 
   def test_board_can_render_cells
     @board.place(@cruiser, ["A1", "A2", "A3"])
-    expected = "   1 2 3 4 \n A . . . .  \n B . . . .  \n C . . . .  \n D . . . . "
+    expected = "  1 2 3 4  \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n"
     assert_equal expected, @board.render
 
-    expected = "   1 2 3 4 \n A S S S .  \n B . . . .  \n C . . . .  \n D . . . . "
+    expected = "  1 2 3 4  \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n"
     assert_equal expected, @board.render(true)
   end
 end
