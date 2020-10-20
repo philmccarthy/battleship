@@ -50,14 +50,21 @@ class Game
   end
 
   def custom_board_query
-    puts "Enter y to create custom board size or n to play with default default."
+    puts "Would you like to create a custom board y/n?"
     print '> '
-    input = gets.chomp.to_s
-    if input == 'y'
+    input = ""
+    until input == "y" || input == "n" do
+      input = gets.chomp.to_s.downcase
+    if input == "y"
       create_custom_board
-    elsif input == 'n'
+    elsif input == "n"
+      @length = 4
+      @width = 4  
+      setup
       custom_ship_query
-    else "I don't recognize that input. Try again."
+    else 
+      puts "I don't recognize that input. Try again."
+    end
     end
   end
 
@@ -86,13 +93,17 @@ class Game
   def custom_ship_query
     puts "Enter y to create custom ships or n to play with default ships."
     print '> '
-    input = gets.chomp.to_s
+    input = ""
+    until input == 'y' || input == 'n' do 
+      input = gets.chomp.to_s.downcase
     if input == 'y'
       create_new_ship
     elsif input == 'n'
       default_ships
       play_game
-    else "I don't recognize that input. Try again."
+    else 
+      puts "I don't recognize that input. Try again."
+    end
     end
   end
 
@@ -214,7 +225,7 @@ class Game
     print '> '
     input = gets.chomp.downcase
     if input == 'm'
-      setup
+      # setup
       main_menu
     elsif input == 'q'
       exit
