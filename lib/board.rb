@@ -9,10 +9,6 @@ class Board
     @width = width
   end
 
-  def board_rows
-    ("A"..(@height + 64).chr).to_a
-  end
-
   def generate
     @board_layout = CreateBoard.new
     array = @board_layout.build_coordinates(@height, @width)
@@ -79,7 +75,8 @@ class Board
   end
 
   def display_row_header(counter)
-    board_rows[counter == 0 ? 0 : counter / @width] + " "
+    rows = @board_layout.build_column(@height)
+    rows[counter / @width] + " "
   end
 
   def render(fog = false)
