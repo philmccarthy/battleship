@@ -8,16 +8,16 @@ class Game
               :computer_board,
               :player,
               :computer
-  def initialize
-    setup
-  end
+  # def initialize
+  #   setup
+  # end
 
   def setup
     @player = Player.new
     @computer = Player.new
-    @player_board = Board.new
+    @player_board = Board.new(@length, @width)
     @player_board.generate
-    @computer_board = Board.new
+    @computer_board = Board.new(@length, @width)
     @computer_board.generate
     health_check
   end
@@ -40,13 +40,47 @@ class Game
       print '> '
       input = gets.chomp.to_s.downcase
       if input == "p"
-        custom_ship_query
+        custom_board_query
       elsif input == "q"
         exit
       else
         puts "\n\nWrong input, please try again."
       end
     end
+  end
+
+  def custom_board_query
+    puts "Enter y to create custom board size or n to play with default default."
+    print '> '
+    input = gets.chomp.to_s
+    if input == 'y'
+      create_custom_board
+    elsif input == 'n'
+      custom_ship_query
+    else "I don't recognize that input. Try again."
+    end
+  end
+
+  def create_custom_board
+    @length = 0
+    @width = 0
+    until @length > 3 && @length < 11 do 
+      puts "Enter board length between 4 and 10."
+      @length = gets.chomp.to_i
+      if @length < 4 || @length > 10
+        puts "Invalid board length."
+      end
+    end
+      
+    until @width > 3 && @width < 11 do 
+      puts "Enter board width between 4 and 10."
+      @width = gets.chomp.to_i
+      if @width < 4 || @width > 10
+        puts "Invalid board width."
+      end
+    end
+    setup
+    custom_ship_query
   end
 
   def custom_ship_query
