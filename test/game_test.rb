@@ -2,10 +2,14 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/game.rb'
 require './lib/board.rb'
+require './lib/player'
 
 class GameTest < Minitest::Test
   def setup
     @game = Game.new
+    @game.length = 4
+    @game.width = 4
+    @game.setup
     @game.default_ships
   end
 

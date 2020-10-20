@@ -8,9 +8,7 @@ class Game
               :computer_board,
               :player,
               :computer
-  # def initialize
-  #   setup
-  # end
+  attr_accessor :length, :width
 
   def setup
     @player = Player.new
@@ -32,8 +30,7 @@ class Game
   end
 
   def main_menu
-    puts "\n"
-    puts "Welcome to BATTLESHIP".center(60, "=")
+    puts "\nWelcome to BATTLESHIP".center(60, "=")
     input = ""
     until input == "p" do
       puts "\nEnter p to play or q to quit"
@@ -225,7 +222,6 @@ class Game
     print '> '
     input = gets.chomp.downcase
     if input == 'm'
-      # setup
       main_menu
     elsif input == 'q'
       exit
