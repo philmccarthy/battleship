@@ -4,10 +4,10 @@ require './lib/board'
 require './lib/player'
 
 class Game
-  attr_reader :player_board,
-              :computer_board,
-              :player,
-              :computer
+  attr_reader   :player_board,
+                :computer_board,
+                :player,
+                :computer
   attr_accessor :length, :width
 
   def setup
@@ -30,7 +30,8 @@ class Game
   end
 
   def main_menu
-    puts "\nWelcome to BATTLESHIP".center(60, "=")
+    puts "\n"
+    puts "Welcome to BATTLESHIP".center(60, "=")
     input = ""
     until input == "p" do
       puts "\nEnter p to play or q to quit"
@@ -52,31 +53,31 @@ class Game
     input = ""
     until input == "y" || input == "n" do
       input = gets.chomp.to_s.downcase
-    if input == "y"
-      create_custom_board
-    elsif input == "n"
-      @length = 4
-      @width = 4  
-      setup
-      custom_ship_query
-    else 
-      puts "I don't recognize that input. Try again."
-    end
+      if input == "y"
+        create_custom_board
+      elsif input == "n"
+        @length = 4
+        @width = 4
+        setup
+        custom_ship_query
+      else
+        puts "I don't recognize that input. Try again."
+      end
     end
   end
 
   def create_custom_board
     @length = 0
     @width = 0
-    until @length > 3 && @length < 11 do 
+    until @length > 3 && @length < 11 do
       puts "Enter board length between 4 and 10."
       @length = gets.chomp.to_i
       if @length < 4 || @length > 10
         puts "Invalid board length."
       end
     end
-      
-    until @width > 3 && @width < 11 do 
+
+    until @width > 3 && @width < 11 do
       puts "Enter board width between 4 and 10."
       @width = gets.chomp.to_i
       if @width < 4 || @width > 10
@@ -91,16 +92,16 @@ class Game
     puts "Enter y to create custom ships or n to play with default ships."
     print '> '
     input = ""
-    until input == 'y' || input == 'n' do 
+    until input == 'y' || input == 'n' do
       input = gets.chomp.to_s.downcase
-    if input == 'y'
-      create_new_ship
-    elsif input == 'n'
-      default_ships
-      play_game
-    else 
-      puts "I don't recognize that input. Try again."
-    end
+      if input == 'y'
+        create_new_ship
+      elsif input == 'n'
+        default_ships
+        play_game
+      else
+        puts "I don't recognize that input. Try again."
+      end
     end
   end
 
