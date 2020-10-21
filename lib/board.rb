@@ -70,7 +70,7 @@ class Board
   end
 
   def set_fog(fog = false)
-    @cells.values.map { |obj| obj.render(fog)}
+    @cells.values.map { |obj| obj.render(fog) }
   end
 
   def display_row_header(counter)
@@ -82,7 +82,7 @@ class Board
     if fog == true
       set_fog(true)
     end
-    first_row = (1..@width).map {|num| num.to_s + " "}
+    first_row = (1..@width).map { |num| num.to_s + " " }
     display = "  #{first_row.join('')} \n"
     counter = 0
     @cells.keys.each do |coord|
