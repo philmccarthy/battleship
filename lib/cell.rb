@@ -32,9 +32,9 @@ class Cell
     elsif empty? && fired_upon?
       @render = "M"
     elsif !empty? && fired_upon? && @ship.sunk?
-        @render = "X"
+      @render = "X"
     elsif !empty? && fired_upon? && !@ship.sunk?
-        @render = "H"
+      @render = "H"
     else @render
     end
   end

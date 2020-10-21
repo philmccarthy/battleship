@@ -26,8 +26,8 @@ class Board
 
   def valid_placement?(ship, coordinates)
     if coordinates.all? { |coord| valid_cell_placement?(ship, coord) }
-    valid_length?(ship, coordinates) &&
-    (valid_horiz?(ship, coordinates) || valid_vertical?(ship, coordinates))
+      valid_length?(ship, coordinates) &&
+      (valid_horiz?(ship, coordinates) || valid_vertical?(ship, coordinates))
     else
       false
     end
@@ -80,16 +80,16 @@ class Board
 
   def render(fog = false)
     if fog == true
-        set_fog(true)
+      set_fog(true)
     end
     first_row = (1..@width).map {|num| num.to_s + " "}
     display = "  #{first_row.join('')} \n"
     counter = 0
     @cells.keys.each do |coord|
-        display += display_row_header(counter) if counter % @width == 0
-        counter += 1
-        display += "#{@cells[coord].render} "
-        display += "\n" if counter % @width == 0
+      display += display_row_header(counter) if counter % @width == 0
+      counter += 1
+      display += "#{@cells[coord].render} "
+      display += "\n" if counter % @width == 0
     end
     display
   end
