@@ -2,7 +2,7 @@
 A [Turing School](https://turing.io/) project by [Joe Jiang](https://github.com/ninesky00) & [Phil McCarthy](https://github.com/philmccarthy)
 
 ### Play the game
-[Play Battleship on our repl.it!](https://battleship.philmccarthy.repl.run/)
+[Play Battleship on this REPL!](https://replit.com/@philmccarthy/battleship#battleship_runner.rb)
 
 Battleship is a command-line interface game built in Ruby during the first half of Mod 1 at Turing's backend engineering program.
 
